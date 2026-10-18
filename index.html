@@ -2,15 +2,38 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>FlowVault - Premium File Portal</title>
   
+  <!-- Telegram WebApp SDK (Required for Telegram Mini Apps & GigaPub) -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
   <!-- Font Awesome Icons & Google Fonts -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   
-  <!-- Direct GigaPub Ad Network Integration -->
-  <script src="https://ad.gigapub.tech/script?id=8700"></script>
+  <!-- GigaPub Enhanced Dual-Host Failover Integration (Project ID: 8700) -->
+  <script data-project-id="8700">
+    !function(){
+      var s = document.currentScript, p = s.getAttribute('data-project-id') || '8700';
+      var d = ['https://ad.gigapub.tech', 'https://ru-ad.gigapub.tech'], i = 0, t, sc;
+      function l() {
+        sc = document.createElement('script');
+        sc.async = true;
+        sc.src = d[i] + '/script?id=' + p;
+        clearTimeout(t);
+        t = setTimeout(function() {
+          sc.onload = sc.onerror = null;
+          sc.src = '';
+          if (++i < d.length) l();
+        }, 15000);
+        sc.onload = function() { clearTimeout(t); };
+        sc.onerror = function() { clearTimeout(t); if (++i < d.length) l(); };
+        document.head.appendChild(sc);
+      }
+      l();
+    }();
+  </script>
 
   <style>
     :root {
@@ -29,6 +52,7 @@
       padding: 0;
       box-sizing: border-box;
       font-family: 'Poppins', sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -79,7 +103,7 @@
     /* Header */
     header {
       width: 100%;
-      padding: 20px 40px;
+      padding: 16px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -92,7 +116,7 @@
     }
 
     .logo {
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       font-weight: 700;
       color: #fff;
       display: flex;
@@ -106,11 +130,11 @@
     .admin-link {
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 8px 16px;
+      padding: 6px 14px;
       border-radius: 20px;
       border: 1px solid var(--border-color);
       transition: 0.3s ease;
@@ -119,19 +143,18 @@
     .admin-link:hover {
       color: #fff;
       border-color: var(--purple-glow);
-      box-shadow: 0 0 10px rgba(177, 94, 255, 0.4);
     }
 
     /* Container & File Grid */
     .container {
       max-width: 1200px;
-      width: 90%;
-      margin: 40px auto;
+      width: 92%;
+      margin: 25px auto 40px;
     }
 
     .section-title {
-      font-size: 1.8rem;
-      margin-bottom: 25px;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
       text-align: center;
       letter-spacing: 1px;
       color: #fff;
@@ -140,8 +163,8 @@
 
     .file-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 25px;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
     }
 
     .file-card {
@@ -155,15 +178,9 @@
       flex-direction: column;
     }
 
-    .file-card:hover {
-      transform: translateY(-8px);
-      border-color: var(--purple-glow);
-      box-shadow: 0 10px 25px rgba(138, 43, 226, 0.3);
-    }
-
     .thumbnail-box {
       width: 100%;
-      height: 170px;
+      height: 160px;
       background: #12072b;
       position: relative;
       overflow: hidden;
@@ -176,7 +193,7 @@
     }
 
     .card-body {
-      padding: 20px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
@@ -184,8 +201,8 @@
 
     .file-name {
       font-weight: 600;
-      font-size: 1.1rem;
-      margin-bottom: 12px;
+      font-size: 1rem;
+      margin-bottom: 10px;
       color: #fff;
       white-space: nowrap;
       overflow: hidden;
@@ -195,9 +212,9 @@
     .meters-bar {
       display: flex;
       justify-content: space-between;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       background: rgba(0, 0, 0, 0.25);
       padding: 8px 12px;
       border-radius: 8px;
@@ -212,6 +229,7 @@
       background: linear-gradient(135deg, var(--purple-primary), var(--purple-glow));
       color: #fff;
       font-weight: 600;
+      font-size: 0.95rem;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -219,11 +237,6 @@
       gap: 8px;
       box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
       transition: 0.3s ease;
-    }
-
-    .btn-action:hover:not(:disabled) {
-      filter: brightness(1.15);
-      box-shadow: 0 6px 20px rgba(177, 94, 255, 0.6);
     }
 
     .btn-action:disabled {
@@ -241,21 +254,22 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(5, 2, 15, 0.85);
+      background: rgba(5, 2, 15, 0.88);
       backdrop-filter: blur(10px);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 100;
+      padding: 15px;
     }
 
     .modal-content {
-      background: var(--card-bg);
+      background: #140827;
       border: 1px solid var(--purple-glow);
-      padding: 30px;
+      padding: 24px 20px;
       border-radius: 20px;
-      max-width: 450px;
-      width: 90%;
+      max-width: 420px;
+      width: 100%;
       text-align: center;
       position: relative;
       box-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
@@ -263,29 +277,28 @@
 
     .close-btn {
       position: absolute;
-      top: 15px;
-      right: 20px;
-      font-size: 1.4rem;
+      top: 12px;
+      right: 16px;
+      font-size: 1.6rem;
       color: var(--text-muted);
       cursor: pointer;
     }
 
-    .ad-box {
+    .ad-info-box {
       width: 100%;
-      height: 110px;
-      background: rgba(0, 0, 0, 0.4);
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.03);
       border: 1px dashed var(--border-color);
       border-radius: 12px;
       margin: 15px 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      font-size: 0.85rem;
+      gap: 6px;
     }
 
-    /* 8 Ads Progress Styles */
     .progress-container {
       margin: 15px 0;
       text-align: left;
@@ -315,6 +328,13 @@
       transition: width 0.3s ease;
     }
 
+    .ad-status-msg {
+      font-size: 0.8rem;
+      color: #ff6b6b;
+      margin: 8px 0;
+      display: none;
+    }
+
     .btn-ad {
       background: linear-gradient(135deg, #f39c12, #e67e22);
       box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
@@ -330,13 +350,11 @@
       grid-column: 1 / -1;
       padding: 60px 0;
       color: var(--text-muted);
-      font-size: 1.1rem;
     }
   </style>
 </head>
 <body>
 
-  <!-- Water Flow Background Layer -->
   <div class="water-flow-bg">
     <div class="wave"></div>
     <div class="wave"></div>
@@ -353,21 +371,18 @@
 
   <div class="container">
     <h2 class="section-title">Available Files</h2>
-    <div class="file-grid" id="fileGrid">
-      <!-- Dynamic files rendered here -->
-    </div>
+    <div class="file-grid" id="fileGrid"></div>
   </div>
 
-  <!-- Ad Modal with 8-Ads Counter Loop -->
+  <!-- Ad Modal with 8-Ads Counter -->
   <div class="modal" id="downloadModal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal()">&times;</span>
       <h3 style="color: #fff; margin-bottom: 5px;" id="modalTitle">File Locked</h3>
       <p style="color: var(--text-muted); font-size: 0.85rem;">
-        Watch all 8 ads to unlock your direct file download link.
+        Complete all 8 rewarded video ads to unlock your direct file download link.
       </p>
 
-      <!-- Progress Meter -->
       <div class="progress-container">
         <div class="progress-info">
           <span>Ads Progress</span>
@@ -378,11 +393,13 @@
         </div>
       </div>
 
-      <!-- GigaPub Ad Container Banner -->
-      <div class="ad-box">
-        <i class="fa-solid fa-rectangle-ad fa-2x" style="margin-bottom: 6px; color: var(--purple-glow);"></i>
-        <span>GigaPub Ad Unit (ID: 8700)</span>
+      <div class="ad-info-box">
+        <i class="fa-solid fa-film fa-2x" style="color: var(--purple-glow);"></i>
+        <span>GigaPub Rewarded Video Unit</span>
       </div>
+
+      <!-- In-app Error Display -->
+      <div id="modalStatusMsg" class="ad-status-msg"></div>
 
       <button class="btn-action btn-ad" id="watchAdBtn" onclick="triggerGigaPubAd()">
         <i class="fa-solid fa-play"></i> Watch Ad (1/8)
@@ -395,6 +412,17 @@
   </div>
 
   <script>
+    // Initialize Telegram WebApp
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      try {
+        tg.setHeaderColor('#0a051b');
+        tg.setBackgroundColor('#0a051b');
+      } catch (e) {}
+    }
+
     const defaultFiles = [
       {
         id: "1",
@@ -424,7 +452,7 @@
     const targetAdsCount = 8;
     
     // Cooldown Anti-Spam Timer
-    const COOLDOWN_SECONDS = 5;
+    const COOLDOWN_SECONDS = 3;
     let cooldownTimer = null;
     let isCooldownActive = false;
 
@@ -433,7 +461,7 @@
       grid.innerHTML = '';
 
       if (files.length === 0) {
-        grid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-folder-open fa-3x" style="margin-bottom: 15px;"></i><br>No files available. Check back later!</div>`;
+        grid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-folder-open fa-3x" style="margin-bottom: 15px;"></i><br>No files available.</div>`;
         return;
       }
 
@@ -471,6 +499,7 @@
       isCooldownActive = false;
       if (cooldownTimer) clearInterval(cooldownTimer);
 
+      hideStatus();
       updateProgressUI();
 
       document.getElementById('modalTitle').innerText = file.title;
@@ -484,6 +513,17 @@
       if (cooldownTimer) clearInterval(cooldownTimer);
       isCooldownActive = false;
       document.getElementById('downloadModal').style.display = 'none';
+    }
+
+    function showStatus(text) {
+      const el = document.getElementById('modalStatusMsg');
+      el.innerText = text;
+      el.style.display = 'block';
+    }
+
+    function hideStatus() {
+      const el = document.getElementById('modalStatusMsg');
+      el.style.display = 'none';
     }
 
     function updateProgressUI() {
@@ -505,34 +545,36 @@
       }
     }
 
-    // Trigger GigaPub Ad with window.showGiga() API Call
+    // Trigger GigaPub Ad
     function triggerGigaPubAd() {
       if (isCooldownActive) return;
+      hideStatus();
 
       const watchBtn = document.getElementById('watchAdBtn');
       watchBtn.disabled = true;
       watchBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Loading Ad...`;
 
+      // Check if GigaPub SDK is mounted
       if (typeof window.showGiga === 'function') {
         window.showGiga()
           .then(() => {
             handleAdComplete();
           })
-          .catch((e) => {
-            console.error("GigaPub Ad error or closed early:", e);
-            // Re-enable button on error so user can retry
+          .catch((err) => {
+            console.error("GigaPub Ad failed or closed:", err);
+            showStatus("Ad was closed early or could not be loaded. Please try again.");
             watchBtn.disabled = false;
             updateProgressUI();
           });
       } else {
-        console.warn("GigaPub SDK not detected or blocked by client. Running fallback step.");
-        setTimeout(() => {
-          handleAdComplete();
-        }, 1200);
+        showStatus("Ad network is connecting... Please retry in a few seconds.");
+        watchBtn.disabled = false;
+        updateProgressUI();
       }
     }
 
     function handleAdComplete() {
+      hideStatus();
       if (currentAdsWatched < targetAdsCount) {
         currentAdsWatched++;
         if (currentAdsWatched < targetAdsCount) {
@@ -572,7 +614,13 @@
       if (file) {
         file.clicks++;
         saveAndUpdate();
-        window.open(file.url, '_blank');
+        
+        // Open safely inside Telegram Mini App webview
+        if (tg && typeof tg.openLink === 'function') {
+          tg.openLink(file.url);
+        } else {
+          window.open(file.url, '_blank');
+        }
         closeModal();
       }
     }
