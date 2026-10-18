@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowVault - Premium File Portal</title>
+  
+  <!-- Font Awesome Icons & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Direct GigaPub Ad Network Script -->
+  <script src="https://ad.gigapub.tech/script?id=8699" async></script>
+
+  <style>
+    :root {
+      --bg-dark: #0a051b;
+      --card-bg: rgba(25, 12, 48, 0.65);
+      --purple-primary: #8a2be2;
+      --purple-glow: #b15eff;
+      --purple-accent: #3b1566;
+      --text-light: #f1e9ff;
+      --text-muted: #a395c9;
+      --border-color: rgba(177, 94, 255, 0.25);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Flowing Liquid Background Animation */
+    .water-flow-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: radial-gradient(circle at 50% 20%, #20083b 0%, #0a051b 80%);
+      overflow: hidden;
+    }
+
+    .wave {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background: radial-gradient(ellipse at center, rgba(138, 43, 226, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+      border-radius: 40%;
+      animation: rotate 18s infinite linear;
+    }
+
+    .wave:nth-child(2) {
+      animation: rotate 25s infinite linear;
+      background: radial-gradient(ellipse at center, rgba(177, 94, 255, 0.1) 0%, rgba(0, 0, 0, 0) 65%);
+      border-radius: 43%;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Header */
+    header {
+      width: 100%;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 5, 27, 0.7);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-shadow: 0 0 12px var(--purple-glow);
+    }
+
+    .logo i { color: var(--purple-glow); }
+
+    .admin-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      transition: 0.3s ease;
+    }
+
+    .admin-link:hover {
+      color: #fff;
+      border-color: var(--purple-glow);
+      box-shadow: 0 0 10px rgba(177, 94, 255, 0.4);
+    }
+
+    /* Container & File Grid */
+    .container {
+      max-width: 1200px;
+      width: 90%;
+      margin: 40px auto;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      margin-bottom: 25px;
+      text-align: center;
+      letter-spacing: 1px;
+      color: #fff;
+      text-shadow: 0 0 8px rgba(177, 94, 255, 0.3);
+    }
+
+    .file-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    .file-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .file-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--purple-glow);
+      box-shadow: 0 10px 25px rgba(138, 43, 226, 0.3);
+    }
+
+    .thumbnail-box {
+      width: 100%;
+      height: 170px;
+      background: #12072b;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .thumbnail-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .file-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .meters-bar {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+
+    .btn-action {
+      margin-top: auto;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--purple-primary), var(--purple-glow));
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+      transition: 0.3s ease;
+    }
+
+    .btn-action:hover:not(:disabled) {
+      filter: brightness(1.15);
+      box-shadow: 0 6px 20px rgba(177, 94, 255, 0.6);
+    }
+
+    .btn-action:disabled {
+      background: rgba(60, 40, 90, 0.6);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      box-shadow: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Modal Overlay */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(5, 2, 15, 0.85);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--purple-glow);
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 450px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.4rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .ad-box {
+      width: 100%;
+      height: 110px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px dashed var(--border-color);
+      border-radius: 12px;
+      margin: 15px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* Progress Styles */
+    .progress-container {
+      margin: 15px 0;
+      text-align: left;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .progress-bar-track {
+      width: 100%;
+      height: 8px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .progress-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--purple-primary), var(--purple-glow));
+      transition: width 0.3s ease;
+    }
+
+    .btn-ad {
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+      box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
+    }
+
+    .btn-download-unlocked {
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+    }
+
+    .empty-state {
+      text-align: center;
+      grid-column: 1 / -1;
+      padding: 60px 0;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Water Flow Background Layer -->
+  <div class="water-flow-bg">
+    <div class="wave"></div>
+    <div class="wave"></div>
+  </div>
+
+  <header>
+    <div class="logo">
+      <i class="fa-solid fa-water"></i> FlowVault
+    </div>
+    <a href="admin.html" class="admin-link">
+      <i class="fa-solid fa-lock"></i> Admin Panel
+    </a>
+  </header>
+
+  <div class="container">
+    <h2 class="section-title">Available Files</h2>
+    <div class="file-grid" id="fileGrid">
+      <!-- Dynamic files rendered here -->
+    </div>
+  </div>
+
+  <!-- Ad Modal with GigaPub 8-Ad Counter -->
+  <div class="modal" id="downloadModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h3 style="color: #fff; margin-bottom: 5px;" id="modalTitle">File Locked</h3>
+      <p style="color: var(--text-muted); font-size: 0.85rem;">
+        Watch all 8 ads to unlock your high-speed file download.
+      </p>
+
+      <!-- Progress Meter -->
+      <div class="progress-container">
+        <div class="progress-info">
+          <span>Ads Progress</span>
+          <span id="progressText">0 / 8 Completed</span>
+        </div>
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressBarFill"></div>
+        </div>
+      </div>
+
+      <!-- GigaPub Ad Unit Container -->
+      <div class="ad-box">
+        <i class="fa-solid fa-rectangle-ad fa-2x" style="margin-bottom: 6px; color: var(--purple-glow);"></i>
+        <span>GigaPub Ad Unit (#8699)</span>
+      </div>
+
+      <button class="btn-action btn-ad" id="watchAdBtn" onclick="triggerGigaPubAd()">
+        <i class="fa-solid fa-play"></i> Watch Ad (1/8)
+      </button>
+
+      <button class="btn-action btn-download-unlocked" id="downloadBtn" style="display: none;" onclick="processDownload()">
+        <i class="fa-solid fa-download"></i> Download File Now
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Initial Setup & Default Files Data
+    const defaultFiles = [
+      {
+        id: "1",
+        title: "Cyberpunk Glow Wallpaper 4K",
+        thumb: "https://picsum.photos/400/250?random=1",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        views: 142,
+        clicks: 38
+      },
+      {
+        id: "2",
+        title: "Purple Neon UI Sound Pack",
+        thumb: "https://picsum.photos/400/250?random=2",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+        views: 289,
+        clicks: 94
+      }
+    ];
+
+    let files = JSON.parse(localStorage.getItem('fv_files')) || defaultFiles;
+    if (!localStorage.getItem('fv_files')) {
+      localStorage.setItem('fv_files', JSON.stringify(files));
+    }
+
+    let activeFileId = null;
+    let currentAdsWatched = 0;
+    const targetAdsCount = 8;
+    
+    // Cooldown Logic
+    const COOLDOWN_SECONDS = 5;
+    let cooldownTimer = null;
+    let isCooldownActive = false;
+
+    function renderFiles() {
+      const grid = document.getElementById('fileGrid');
+      grid.innerHTML = '';
+
+      if (files.length === 0) {
+        grid.innerHTML = `<div class="empty-state"><i class="fa-solid fa-folder-open fa-3x" style="margin-bottom: 15px;"></i><br>No files available. Check back later!</div>`;
+        return;
+      }
+
+      files.forEach(file => {
+        const card = document.createElement('div');
+        card.className = 'file-card';
+        card.innerHTML = `
+          <div class="thumbnail-box">
+            <img src="${file.thumb}" alt="${file.title}" onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'">
+          </div>
+          <div class="card-body">
+            <div class="file-name" title="${file.title}">${file.title}</div>
+            <div class="meters-bar">
+              <span><i class="fa-regular fa-eye"></i> ${file.views} Views</span>
+              <span><i class="fa-solid fa-download"></i> ${file.clicks} Downloads</span>
+            </div>
+            <button class="btn-action" onclick="openDownloadModal('${file.id}')">
+              <i class="fa-solid fa-lock"></i> Get File
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function openDownloadModal(id) {
+      activeFileId = id;
+      const file = files.find(f => f.id === id);
+      if (!file) return;
+
+      file.views++;
+      saveAndUpdate();
+
+      currentAdsWatched = 0;
+      isCooldownActive = false;
+      if (cooldownTimer) clearInterval(cooldownTimer);
+
+      updateProgressUI();
+
+      document.getElementById('modalTitle').innerText = file.title;
+      document.getElementById('watchAdBtn').style.display = 'flex';
+      document.getElementById('watchAdBtn').disabled = false;
+      document.getElementById('downloadBtn').style.display = 'none';
+      document.getElementById('downloadModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      if (cooldownTimer) clearInterval(cooldownTimer);
+      isCooldownActive = false;
+      document.getElementById('downloadModal').style.display = 'none';
+    }
+
+    function updateProgressUI() {
+      const percent = (currentAdsWatched / targetAdsCount) * 100;
+      document.getElementById('progressBarFill').style.width = percent + '%';
+      document.getElementById('progressText').innerText = `${currentAdsWatched} / ${targetAdsCount} Completed`;
+
+      const watchBtn = document.getElementById('watchAdBtn');
+      if (currentAdsWatched < targetAdsCount) {
+        if (!isCooldownActive) {
+          watchBtn.innerHTML = `<i class="fa-solid fa-play"></i> Watch Ad (${currentAdsWatched + 1}/${targetAdsCount})`;
+          watchBtn.disabled = false;
+        }
+        watchBtn.style.display = 'flex';
+        document.getElementById('downloadBtn').style.display = 'none';
+      } else {
+        watchBtn.style.display = 'none';
+        document.getElementById('downloadBtn').style.display = 'flex';
+      }
+    }
+
+    // Direct GigaPub showGiga API Integration
+    function triggerGigaPubAd() {
+      if (isCooldownActive) return;
+
+      const watchBtn = document.getElementById('watchAdBtn');
+      watchBtn.disabled = true;
+      watchBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Loading Ad...`;
+
+      if (typeof window.showGiga === 'function') {
+        window.showGiga()
+          .then(() => {
+            handleAdComplete();
+          })
+          .catch((e) => {
+            console.error("GigaPub Ad error or closed early:", e);
+            // Advance step on fallback if ad fails to load
+            handleAdComplete();
+          });
+      } else {
+        // Fallback simulation if ad blocker is active or script loading on file://
+        setTimeout(() => {
+          handleAdComplete();
+        }, 1200);
+      }
+    }
+
+    function handleAdComplete() {
+      if (currentAdsWatched < targetAdsCount) {
+        currentAdsWatched++;
+        if (currentAdsWatched < targetAdsCount) {
+          startCooldownTimer();
+        } else {
+          updateProgressUI();
+        }
+      }
+    }
+
+    function startCooldownTimer() {
+      isCooldownActive = true;
+      let timeLeft = COOLDOWN_SECONDS;
+      const watchBtn = document.getElementById('watchAdBtn');
+      
+      watchBtn.disabled = true;
+      watchBtn.innerHTML = `<i class="fa-solid fa-hourglass-half fa-spin"></i> Please wait ${timeLeft}s for next ad`;
+
+      const percent = (currentAdsWatched / targetAdsCount) * 100;
+      document.getElementById('progressBarFill').style.width = percent + '%';
+      document.getElementById('progressText').innerText = `${currentAdsWatched} / ${targetAdsCount} Completed`;
+
+      cooldownTimer = setInterval(() => {
+        timeLeft--;
+        if (timeLeft > 0) {
+          watchBtn.innerHTML = `<i class="fa-solid fa-hourglass-half fa-spin"></i> Please wait ${timeLeft}s for next ad`;
+        } else {
+          clearInterval(cooldownTimer);
+          isCooldownActive = false;
+          updateProgressUI();
+        }
+      }, 1000);
+    }
+
+    function processDownload() {
+      const file = files.find(f => f.id === activeFileId);
+      if (file) {
+        file.clicks++;
+        saveAndUpdate();
+        window.open(file.url, '_blank');
+        closeModal();
+      }
+    }
+
+    function saveAndUpdate() {
+      localStorage.setItem('fv_files', JSON.stringify(files));
+      renderFiles();
+    }
+
+    renderFiles();
+  </script>
+</body>
+  </html>
