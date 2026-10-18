@@ -9,8 +9,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   
-  <!-- Direct GigaPub Ad Network Script -->
-  <script src="https://ad.gigapub.tech/script?id=8699" async></script>
+  <!-- Direct GigaPub Ad Network Integration -->
+  <script src="https://ad.gigapub.tech/script?id=8700"></script>
 
   <style>
     :root {
@@ -285,7 +285,7 @@
       font-size: 0.85rem;
     }
 
-    /* Progress Styles */
+    /* 8 Ads Progress Styles */
     .progress-container {
       margin: 15px 0;
       text-align: left;
@@ -358,13 +358,13 @@
     </div>
   </div>
 
-  <!-- Ad Modal with GigaPub 8-Ad Counter -->
+  <!-- Ad Modal with 8-Ads Counter Loop -->
   <div class="modal" id="downloadModal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal()">&times;</span>
       <h3 style="color: #fff; margin-bottom: 5px;" id="modalTitle">File Locked</h3>
       <p style="color: var(--text-muted); font-size: 0.85rem;">
-        Watch all 8 ads to unlock your high-speed file download.
+        Watch all 8 ads to unlock your direct file download link.
       </p>
 
       <!-- Progress Meter -->
@@ -378,10 +378,10 @@
         </div>
       </div>
 
-      <!-- GigaPub Ad Unit Container -->
+      <!-- GigaPub Ad Container Banner -->
       <div class="ad-box">
         <i class="fa-solid fa-rectangle-ad fa-2x" style="margin-bottom: 6px; color: var(--purple-glow);"></i>
-        <span>GigaPub Ad Unit (#8699)</span>
+        <span>GigaPub Ad Unit (ID: 8700)</span>
       </div>
 
       <button class="btn-action btn-ad" id="watchAdBtn" onclick="triggerGigaPubAd()">
@@ -395,7 +395,6 @@
   </div>
 
   <script>
-    // Initial Setup & Default Files Data
     const defaultFiles = [
       {
         id: "1",
@@ -424,7 +423,7 @@
     let currentAdsWatched = 0;
     const targetAdsCount = 8;
     
-    // Cooldown Logic
+    // Cooldown Anti-Spam Timer
     const COOLDOWN_SECONDS = 5;
     let cooldownTimer = null;
     let isCooldownActive = false;
@@ -506,7 +505,7 @@
       }
     }
 
-    // Direct GigaPub showGiga API Integration
+    // Trigger GigaPub Ad with window.showGiga() API Call
     function triggerGigaPubAd() {
       if (isCooldownActive) return;
 
@@ -521,11 +520,12 @@
           })
           .catch((e) => {
             console.error("GigaPub Ad error or closed early:", e);
-            // Advance step on fallback if ad fails to load
-            handleAdComplete();
+            // Re-enable button on error so user can retry
+            watchBtn.disabled = false;
+            updateProgressUI();
           });
       } else {
-        // Fallback simulation if ad blocker is active or script loading on file://
+        console.warn("GigaPub SDK not detected or blocked by client. Running fallback step.");
         setTimeout(() => {
           handleAdComplete();
         }, 1200);
@@ -585,4 +585,4 @@
     renderFiles();
   </script>
 </body>
-  </html>
+</html>
